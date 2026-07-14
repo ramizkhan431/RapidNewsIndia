@@ -13,7 +13,9 @@ def _build_engine():
 
     if db_url.startswith("sqlite"):
         connect_args = {"check_same_thread": False}
-    elif not db_url.startswith("postgresql"):
+    elif db_url.startswith("postgresql"):
+        connect_args = {"sslmode": "require"}
+    else:
         logger.warning("Invalid database URL scheme. Defaulting to local SQLite database.")
         db_url = "sqlite:///./rapid_news.db"
         connect_args = {"check_same_thread": False}
