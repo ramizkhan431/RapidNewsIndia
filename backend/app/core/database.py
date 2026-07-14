@@ -20,14 +20,8 @@ def _build_engine():
         db_url = "sqlite:///./rapid_news.db"
         connect_args = {"check_same_thread": False}
 
-    engine = create_engine(db_url, connect_args=connect_args, **engine_kwargs)
-
-    if db_url.startswith("postgresql"):
-        with engine.connect() as connection:
-            connection.execute(text("SELECT 1"))
-        return engine
-
     try:
+        engine = create_engine(db_url, connect_args=connect_args, **engine_kwargs)
         with engine.connect() as connection:
             connection.execute(text("SELECT 1"))
         return engine
