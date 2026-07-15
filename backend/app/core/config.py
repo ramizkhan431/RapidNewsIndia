@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "static/uploads"
     HOST: str = "0.0.0.0"
     PORT: int = 8000
+    ADMIN_EMAIL: str = "admin@rapidnewsindia.com"
+    ADMIN_PASSWORD: str = "adminpassword123"
 
     model_config = ConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), ".env"),

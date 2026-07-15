@@ -54,16 +54,26 @@ def init_roles_and_admin(db: Session):
             db.refresh(role)
         role_objs[r_name] = role
 
-    # Check if admin user exists
-    admin_user = db.query(User).filter(User.email == "admin@rapidnewsindia.com").first()
+    # Ensure an admin user exists and matches the configured credentials
+    admin_email = settings.ADMIN_EMAIL
+    admin_password = settings.ADMIN_PASSWORD
+    admin_user = db.query(User).filter(User.email == admin_email).first()
     if not admin_user:
         admin_user = User(
-            email="admin@rapidnewsindia.com",
-            hashed_password=get_password_hash("adminpassword123"),
+            email=admin_email,
+            hashed_password=get_password_hash(admin_password),
             full_name="System Admin",
             role_id=role_objs['admin'].id,
             is_active=True
         )
+        db.add(admin_user)
+        db.commit()
+        db.refresh(admin_user)
+    else:
+        admin_user.role_id = role_objs['admin'].id
+        admin_user.is_active = True
+        admin_user.hashed_password = get_password_hash(admin_password)
+        admin_user.full_name = admin_user.full_name or "System Admin"
         db.add(admin_user)
         db.commit()
         db.refresh(admin_user)
